@@ -63,10 +63,10 @@
     <Content Include="ModInfo.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Mods\DropMiner\DropMiner.dll" />
+    <Content Include="Mods\DropMiner\ModInfo.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mods\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rmdir "$(SolutionDir)DropMiner\Mods\DropMiner" /s /q
