@@ -1,8 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
+using DropMiner.Commands;
 
 public class API : IModApi
 {
   public static Queue<int> DespawnQueue = new Queue<int>();
+  public static int EntityCountTrigger = 0;
+  public static int FallingCountTrigger = 0;
 
   public void InitMod()
   {
@@ -20,14 +24,22 @@ public class API : IModApi
 
   private static void GameStartDone()
   {
-    GameManager.Instance.World.EntityLoadedDelegates += OnEntityLoaded;
+    //Todo: check config and set or not
+    BMDropMiner.SetEnabled();
   }
 
-  private static void OnEntityLoaded(Entity entity)
+  internal static void OnEntityLoaded(Entity entity)
   {
-    if (entity is EntityFallingBlock)
-    {
-      DespawnQueue.Enqueue(entity.entityId);
-    }
+    //If total entities is greater than the trigger then continue
+    if (EntityCountTrigger != 0 && GameManager.Instance.World.Entities.Count < EntityCountTrigger) { return; }
+
+    //If the entity is not a falling block then return
+    if (!(entity is EntityFallingBlock)) { return; }
+
+    if (FallingCountTrigger != 0 &&
+        GameManager.Instance.World.Entities.list.OfType<EntityFallingBlock>()
+          .Count() < FallingCountTrigger) { return; }
+
+    DespawnQueue.Enqueue(entity.entityId);
   }
 }
